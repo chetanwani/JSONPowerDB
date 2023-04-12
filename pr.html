@@ -1,0 +1,284 @@
+
+<html lang="en">
+<head>
+  <title>Student Enrollment Form</title>
+  <link rel="stylesheet" 
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script
+  src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>>
+  
+
+  <style>
+      body {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  form {
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    color: #666;
+    cursor: default;
+  }</style>
+</head>
+
+
+<body>
+  <h1>Student Enrollment Form</h1>
+  <form>
+    <div class="form-group">
+      <label>Roll No:</label>
+      <input type="text"id="stdroll"name="roll-no"onchange="getStd()">
+    </div>
+    <div class="form-group">
+      <label>Full Name:</label>
+      <input type="text" id="stdname" name="full-name">
+    </div>
+    <div class="form-group">
+      <label>Class:</label>
+      <input type="text" id="stdclass" name="class">
+    </div>
+    <div class="form-group">
+      <label>Birth Date:</label>
+      <input type="date" id="stdbirth" name="birth-date">
+    </div>
+    <div class="form-group">
+      <label>Address:</label>
+      <textarea id="address" name="stdaddress"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Enrollment Date:</label>
+      <input type="date" id="enrdate" name="enrollment-date">
+    </div>
+    <div class="form-group">
+      <button type="submit" id="save" disabled onclick="saveData()">Save</button>
+      <button type="button" id="update" disabled onclick="changeData()">Update</button>
+      <button type="button" id="reset" disabled onclick="resetData()">Reset</button>
+      
+    </div>
+  </form>
+<script src= "http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+  <script>
+var jpdbBaseURL = "http://api.login2explore.com:5577";
+var jpdbIRL = "/api/irl";
+var jpdbIML = "/api/iml";
+var stdDBName = "STD-DB";
+var stdRelationNama = "StdData";
+var connToken = "90932855|-31949281685838688|90948342";
+$("#stdroll").focus();
+
+function saveRecNo2LS(jsonObj){
+    var lvData = JSON.parse(jsonObj.data);
+    localStorage.setItem("recno",lvData.rec_no);
+}
+function getEmpIdAsJsonObj(){
+    var stdroll = $("#stdid").val();
+    var jsonStr = {
+        Roll_NO: stdroll
+    };
+
+    return JSON.stringify(jsonStr);
+}
+function creatGET_BY_KEYRequest(jpdbBaseURL, )
+function executeCommandAtGivanBaseUrl(reqString, dbBaseUrl, apiEndPointUrl){
+  var url = dbBaseUrl + apiEndPointUrl;
+var jsonObj;
+$.post(url, reqString, function (result) {
+jsonObj = JSON.parse(result);
+}).fail(function (result) {
+var dataJsonObj = result.responseText;
+jsonObj = JSON.parse(dataJsonObj);
+});
+return jsonObj;
+
+
+}
+function fillData(jsonObj){
+    saveRecNo2LS(jsonObj);
+    var record = JSON.parse(jsonObj.data).record;
+
+    $("#stdname").val(data.name);
+    $("#stdbirth").val(data.Birth_Date);
+    $("#stdaddress").val(data.Address);
+    $("stdclass").val(data.class);
+    $("#enrdate").val(data.EnrollmentDate);
+
+
+}
+
+
+
+function resetform(){
+    $("#stdroll").val("");
+    $("#stdname").val("");
+    $("#stdbirth").val("");
+    $("#stdaddress").val("");
+    $("stdclass").val("");
+    $("#enrdate").val("");
+    $("#stdroll").prop("dissabled",false);
+    $("#save").prop("dissabled",true);
+    $("#change").prop("dissabled",true);
+    $("#reset").prop("dissabled",true);
+    $("#stdroll").focus();
+
+    
+}
+function validateData(){
+    var stdroll, stdname, stdbirth, stdaddress, stdclass, enrdate;
+   stdroll= $("#stdroll").val("");
+    stdname=$("#stdname").val("");
+    stdbirth=$("#stdbirth").val("");
+    stdaddress=$("#stdaddress").val("");
+    stdclass=$("stdclass").val("");
+    enrdate=$("#enrdate").val("");
+
+    if(stdroll==="")
+    {
+        alert("Student Roll Number is Missing");
+        $("#stdroll").focus();
+        return "";
+    }
+    if(stdname==="")
+    {
+        alert("student Name is missing");
+        $("#stdname").focus();
+        return "";
+    }
+    if(stdbirth==="")
+    {
+        alert("Invallide Birthdate");
+        $("#stdbirth").focus();
+        return "";
+    }
+    if(stdaddress ==="")
+    {
+        alert("Address is missing");
+        $("#stdaddress").focus();
+        return "";
+
+    }
+    if( stdclass ===""){
+        alert("Student class is missing");
+        $("#stdclass").focus();
+        return "";
+    }
+    if(enrdate==="")
+    {
+        alert("Invallide Enrollment Date");
+        $("#enrdate").focus();
+        return "";
+    }
+    var jsonStrObj={
+    Roll_NO:stdroll,
+    Name:stdDBName,
+    Birth_Date:stdbirth,
+    Address: stdaddress,
+    class:stdclass,
+    
+    EnrollmentDate:enrdate,
+
+};
+return JSON.stringify(jsonStrObj);
+}
+
+        
+    
+
+
+    function getStd(){
+    var stdrollJsonObj = getEmpIdAsJsonObj();
+    var getRequest = creatGET_BY_KEYRequest (connToken, stdDBName, stdRelationNama, stdrollJsonObj);
+    jQuery.ajaxSetup({async:false});
+    var resJsonObj = executeCommandAtGivanBaseUrl(getRequest, jpdbBaseURL, jpdbIRL);
+    jQuery.ajaxSetup({async:true});
+    if( resJsonObj.status === 400){
+        $("#save").prop("disabled",false);
+        $("#reset").prop("disabled",false);
+        $("#stdname").focus();
+    }
+    else if( resJsonObj.status===200){
+        $("#stdroll").prop("disabled",true);
+        fillData(resJsonObj);
+        $("#change").prop("disabled",false);
+        $("#reset").prop("disabled",false);
+        $("#stdname").focus();
+    }
+
+
+
+    }
+function saveData(){
+    var jsonStrObj = validateData();
+    if(jsonStrObj === "")
+    {
+        return "";
+    }
+    var putRequest = creatPutRequest(connToken, jsonStrObj, stdDBname, stdRelationNama);
+    jQuery.ajaxSetup({async:false});
+    var resJsonObj = executeCommandAtGivanBaseUrl(putRequest,jpdbURL, jpdbIML);
+    jQuery.ajaxSetup({async:true});
+    resetform();
+    $("#stdroll").focus();
+    
+}
+function changeData(){
+    $("#change").prop("disabled",true);
+    jsonstr = validateData();
+    var updateRequest = creaUPDATERecordRequest(connToken, jsonstr, stdDBName, stdRelationNama, localStorage.getItem("recno"));
+
+}
+</script>
+</body>
+
+
